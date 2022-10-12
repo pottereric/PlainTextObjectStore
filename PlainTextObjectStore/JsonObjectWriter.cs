@@ -29,11 +29,17 @@ public class JsonObjectWriter<T> where T: IRecord
     //    T record = JsonSerializer.Deserialize<T>(fullName) ?? default(T);
     //}
 
+    private bool IsJsonFile(string fileName)
+    {
+        var fileInfo = new FileInfo(fileName);
+        return fileInfo.Extension.ToLower() == "json";
+    }
+
     public IEnumerable<T> ReadAll()
     {
         List<T> allRecords = new();
 
-        var fileNames = Directory.EnumerateFiles(_folderName);
+        var fileNames = Directory.EnumerateFiles(_folderName).Where(fn => IsJsonFile(fn));
 
         foreach (var fileName in fileNames)
         {
